@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Descubre SuperSammy, la solución perfecta para simplificar la gestión financiera entre amigos. Con una interfaz intuitiva, nuestra app permite dividir fácilmente gastos, registrar deudas y realizar pagos equitativos en situaciones sociales. Organiza y calcula automáticamente los montos, garantizando una distribución justa de las responsabilidades financieras. Desde compartir cuentas hasta dividir gastos grupales, esta aplicación ofrece una herramienta esencial para mantener las finanzas amigables y transparentes. Olvídate de los malentendidos y disfruta de una experiencia financiera colaborativa sin complicaciones.">
+  <meta name="keywords" content="División de gastos, Deudas compartidas, App de pagos entre amigos, Split de cuentas, Dividir gastos, Compartir cuentas, Organizador de deudas, Pago equitativo, Amigos y finanzas, Registro de gastos grupales, Dividir la cuenta, Compartir gastos, Deudas sociales, App de economía grupal, Balance de cuentas, División justa, Calculadora de deudas, Gastos compartidos, Pago proporcional, Finanzas entre amigos, Splitwise, Deudas simplificadas, Cuentas compartidas, App de equidad financiera, Pago colaborativo, Control de deudas, Compartir responsabilidades financieras, Organizador de gastos sociales, Gastos en grupo, Pagos proporcionales, App de cálculo de deudas, Finanzas colaborativas, Divide y vencerás, Cuaderno de cuentas, Deudas amistosas, Equilibrio financiero, Compartir facturas, App de gestión de gastos, Deuda justa, Control financiero entre amigos, Pago compartido, Amigos y dinero, Simplificar cuentas, Deudas en equipo, Compartir responsabilidades financieras, Calculadora de pagos grupales, Equidad financiera, División amigable, App de cuentas compartidas, Finanzas en grupo, App de cuentas pendientes, Registro de transacciones grupales, Solución de pagos entre amigos, División proporcional de deudas, Manejo colaborativo de gastos, Organizador financiero social, Plataforma de pagos amigable, Compartir responsabilidades monetarias, Calculadora de deudas compartidas, Control financiero en grupo, App de finanzas colaborativas, Pago justo entre amigos, Gestión equitativa de gastos, División transparente de cuentas, Deudas en común, Plataforma de pagos proporcionales, Finanzas compartidas, Registro de deudas amigable, Control de gastos sociales, App de reparto de gastos, Pagos colaborativos, Dividir cuentas fácilmente, Equidad en los pagos, Deudas compartidas entre amigos, Calculadora de gastos grupales, Solución de deudas sociales, Plataforma de pagos justos, App de finanzas amigables, Registro equitativo de transacciones, División clara de responsabilidades financieras, Pago compartido equitativamente, Organizador de cuentas en grupo, Deudas entre amistades, Plataforma de pago justo, App para dividir cuentas fácil, Registro de deudas transparente, Manejo eficiente de gastos sociales, Calculadora de pagos justos, Finanzas colaborativas entre amigos, División equitativa de facturas, App de pagos proporcionales, Control financiero compartido, Registro transparente de pagos, Plataforma de deudas compartidas, Solución de gastos en grupo, Dividir cuentas proporcionalmente, Equidad en las finanzas grupales, App de pagos transparentes, Organizador de gastos proporcionales, Registro de deudas colaborativas">
+  <title>SuperSammy: Amigos & Finanzas</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="shortcut icon" href="./multimedia/carrusel-sammy1-fotor-20231130161427.png" type="image/x-icon">
+</head>
+<body>
+  <main>
+    <section id="section-1">
+      <article id="article-1">
+        <h1>Hola! Bienvenido a SuperSammy, tu SDM (Sistema de División Monetaria). Pulse “OK” para continuar.</h1>
+        <p>Pulse <button id="ok-button">OK</button> para continuar.</p>
+        <button id="mostrar-historial">VER HISTORIAL</button>
+      </article>
+      <article id="article-2" class="display-none">
+        <form id="form-1">
+          <div id="div-cuantosamigos">
+            <input type="text" id="input-cuantosamigos">
+            <label for="input-cuantosamigos" id="label-cuantosamigos">¿Cuántos amigos fueron?</label>
+            <label for="input-cuantosamigos" id="labelerror-cuantosamigos" class="display-none"></label>
+            <button id="ok2">OK</button>
+          </div>
+          <div id="div-total" class="display-none">
+            <input type="text" id="input-total">
+            <label for="input-total" id="label-total">¿Total del pago?</label>
+            <label for="input-total" id="labelerror-total" class="display-none"></label>
+            <button id="ok3">OK</button>
+          </div>
+        </form>
+      </article>
+      <article id="article-tarjeta">
+        <button id="calcular" class="display-none">CALCULAR</button>
+        <p id="perror-article" class="display-none"></p>
+        <button id="reiniciar" class="display-none">REINICIAR (próximamente)</button>
+      </article>
+      <aside class="display-none">
+        <p id="p1-aside"></p>
+        <p id="p2-aside"></p>
+        <p id="perror-aside" class="display-none"></p>
+        <p id="perror2-aside" class="display-none"></p>
+      </aside>
+    </section>
+    <section id="historial-section" class="display-none">
+    </section>
+  </main>
+<script src="./main.js" type="module"></script>
+</body>
+</html>

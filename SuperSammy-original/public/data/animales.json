@@ -1,0 +1,26 @@
+[
+    {
+        "nombre": "cerdo",
+        "imagen": "/SuperSammy-original/multimedia/cerdo.png"
+    },
+    {
+        "nombre": "pez payaso",
+        "imagen": "/SuperSammy-original/multimedia/pez-payaso.png"
+    },
+    {
+        "nombre": "capibara",
+        "imagen": "/SuperSammy-original/multimedia/capibara.png"
+    },
+    {
+        "nombre": "perezoso",
+        "imagen": "/SuperSammy-original/multimedia/perezoso.png"
+    },
+    {
+        "nombre": "rata",
+        "imagen": "/SuperSammy-original/multimedia/rata.png"
+    },
+    {
+        "nombre": "mapache",
+        "imagen": "/SuperSammy-original/multimedia/mapache.png"
+    }
+]
