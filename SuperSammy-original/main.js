@@ -167,34 +167,26 @@ function articuloAnimales(animal) {
         articulo = "El";
     }
 }
-function mostrarDatos (amigosLength, amigos, deudaTotal, ) {
-    let article4 = document.createElement("article");
-    historialSection.append(article4);
-    for (let m = 0; m < amigosLength; m++) { //for
-        let tarjetaHistorial = document.createElement("div");
-        historialSection.append(tarjetaHistorial);
-        let objetoM = amigos[m];
-        articuloAnimales(objetoM.nombreAnimal);
-        let uldeudas = document.createElement("ul");
-        let amigocartel = document.createElement("h2");
-        amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`;
-        tarjetaHistorial.append(amigocartel);
-        tarjetaHistorial.append(uldeudas);
-        article4.append(tarjetaHistorial);
-        if (objetoM.deudor == false) {
-            ifAcreedor2 (objetoM.deudaPara, uldeudas);
-        } else {
-            for (let n = 0; n < amigos.length; n++) {
-                while (n != m && n < amigos.length) {
-                    let objetoN = amigos[n];
-                     ifSegundosCases (objetoN.deudor, objetoM.deuda, objetoN.deudaPara, objetoN.nombre, deudaTotal, uldeudas);
-                     // (He cargado dos variables distintas que contienen los objetos originarios del array "Amigos", para separar en parámetros
-                     // a las propiedades pertenecientes al deudor (con objetoM) de las pertenecientes a los acreedores (con objetoN). Esto gracias, además, a las condiciones del while contenedor.)
-                    n++;
-                }
+function mostrarDatos(protoAmigos, m, deudaTotal) {
+    let objetoM = protoAmigos[m];
+    let uldeudas = document.createElement("ul");
+    let amigocartel = document.createElement("h2");
+    articuloAnimales(objetoM.nombreAnimal);
+    amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`;
+    if (objetoM.deudor == false) {
+        ifAcreedor2 (objetoM.deudaPara, uldeudas);
+    } else {
+        for (let n = 0; n < protoAmigos.length; n++) {
+            while (n != m && n < protoAmigos.length) {
+                let objetoN = protoAmigos[n];
+                 ifSegundosCases (objetoN.deudor, objetoM.deuda, objetoN.deudaPara, objetoN.nombre, deudaTotal, uldeudas);
+                 // (He cargado dos variables distintas que contienen los objetos originarios del array "Amigos", para separar en parámetros
+                 // a las propiedades pertenecientes al deudor (con objetoM) de las pertenecientes a los acreedores (con objetoN). Esto gracias, además, a las condiciones del while contenedor.)
+                n++;
             }
         }
     }
+    return [uldeudas, amigocartel];
 }
 mostrarHistorial.addEventListener("click", ()=>{
   let sesionJS = JSON.parse(localStorage.getItem("sesion"));
@@ -207,7 +199,17 @@ mostrarHistorial.addEventListener("click", ()=>{
     historialSection.classList.remove("display-none");
     for (let q = 0; q < sesion.length; q++) {
         let varSesion = sesion[q];
-        mostrarDatos(varSesion.amigosLength, varSesion.amigos, varSesion.deudaTotal);
+        // cargarDatos(varSesion.amigosLength, varSesion.amigos, varSesion.deudaTotal);
+        let article4 = document.createElement("article");
+        historialSection.append(article4);
+        for (let m = 0; m < varSesion.amigosLength; m++) {
+            let tarjetaHistorial = document.createElement("div");
+            let varMostrarDatos = mostrarDatos(varSesion.amigos, m, varSesion.deudaTotal);
+            tarjetaHistorial.append(varMostrarDatos[1]);
+            tarjetaHistorial.append(varMostrarDatos[0]);
+            historialSection.append(tarjetaHistorial);
+            article4.append(tarjetaHistorial);
+        }
     }
     regresar.innerText = `Volver al sistema`;
     historialSection.append(regresar);
@@ -370,26 +372,9 @@ ok3.addEventListener("click", ()=>{
                 booleanhelper = true;
                 for (let m = 0; m <= Amigos.length-1; m++) {
                     conjuntoTarjetas[m].innerHTML = "";
-                    let objetoM = Amigos[m];
-                    articuloAnimales(objetoM.nombreAnimal);
-                    let uldeudas = document.createElement("ul");
-                    let amigocartel = document.createElement("h2");
-                    amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`
-                    conjuntoTarjetas[m].append(amigocartel);
-                    conjuntoTarjetas[m].append(uldeudas);       
-                    if (objetoM.deudor == false) {
-                        ifAcreedor2 (objetoM.deudaPara, uldeudas);
-                    } else {       
-                        for (let n = 0; n < Amigos.length; n++) {
-                            while (n != m && n < Amigos.length) {
-                                let objetoN = Amigos[n];
-                                 ifSegundosCases (objetoN.deudor, objetoM.deuda, objetoN.deudaPara, objetoN.nombre, deudaTotal, uldeudas);
-                                 // (He cargado dos variables distintas que contienen los objetos originarios del array "Amigos", para separar en parámetros
-                                 // a las propiedades pertenecientes al deudor (con objetoM) de las pertenecientes a los acreedores (con objetoN). Esto gracias, además, a las condiciones del while contenedor.)
-                                n++;
-                            }
-                        }
-                    }
+                    let varMostrarDatos2 = mostrarDatos(Amigos, m, deudaTotal);
+                    conjuntoTarjetas[m].append(varMostrarDatos2[1]);
+                    conjuntoTarjetas[m].append(varMostrarDatos2[0]);
                 }
                 article3.append(reiniciar);
                 article3.append(mostrarHistorial);
@@ -463,65 +448,3 @@ if (booleanhelper == true) {
     article1.classList.remove("display-none");
 }
 })
-
-
-// // For de calcular
-// for (let m = 0; m <= Amigos.length-1; m++) {
-//     conjuntoTarjetas[m].innerHTML = "";
-//     let objetoM = Amigos[m];
-//     let uldeudas = document.createElement("ul");
-//     let amigocartel = document.createElement("h2");
-//     articuloAnimales(objetoM.nombreAnimal);
-//     amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`
-//     conjuntoTarjetas[m].append(amigocartel);
-//     conjuntoTarjetas[m].append(uldeudas);       
-//     if (objetoM.deudor == false) {
-//         ifAcreedor2 (objetoM.deudaPara, uldeudas);
-//     } else {       
-//         for (let n = 0; n < Amigos.length; n++) {
-//             while (n != m && n < Amigos.length) {
-//                 let objetoN = Amigos[n];
-//                  ifSegundosCases (objetoN.deudor, objetoM.deuda, objetoN.deudaPara, objetoN.nombre, deudaTotal, uldeudas);
-//                  // (He cargado dos variables distintas que contienen los objetos originarios del array "Amigos", para separar en parámetros
-//                  // a las propiedades pertenecientes al deudor (con objetoM) de las pertenecientes a los acreedores (con objetoN). Esto gracias, además, a las condiciones del while contenedor.)
-//                 n++;
-//             }
-//         }
-//     }
-// }
-// // For de mostrarDatos
-// for (let m = 0; m < amigosLength; m++) {
-//     let tarjetaHistorial = document.createElement("div");
-//     historialSection.append(tarjetaHistorial);
-//     let objetoM = amigos[m];
-//     let uldeudas = document.createElement("ul");
-//     let amigocartel = document.createElement("h2");
-//     articuloAnimales(objetoM.nombreAnimal);
-//     amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`;
-//     tarjetaHistorial.append(amigocartel);
-//     tarjetaHistorial.append(uldeudas);
-//     article4.append(tarjetaHistorial);
-//     if (objetoM.deudor == false) {
-//         ifAcreedor2 (objetoM.deudaPara, uldeudas);
-//     } else {
-//         for (let n = 0; n < amigos.length; n++) {
-//             while (n != m && n < amigos.length) {
-//                 let objetoN = amigos[n];
-//                  ifSegundosCases (objetoN.deudor, objetoM.deuda, objetoN.deudaPara, objetoN.nombre, deudaTotal, uldeudas);
-//                  // (He cargado dos variables distintas que contienen los objetos originarios del array "Amigos", para separar en parámetros
-//                  // a las propiedades pertenecientes al deudor (con objetoM) de las pertenecientes a los acreedores (con objetoN). Esto gracias, además, a las condiciones del while contenedor.)
-//                 n++;
-//             }
-//         }
-//     }
-// }
-
-// function forMostrar(protoAmigos, protoTarjetas, ) {
-//     let objetoM = amigos[m];
-//     let uldeudas = document.createElement("ul");
-//     let amigocartel = document.createElement("h2");
-//     articuloAnimales(objetoM.nombreAnimal);
-//     amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`;
-//     tarjetaHistorial.append(amigocartel);
-//     tarjetaHistorial.append(uldeudas);
-// }
