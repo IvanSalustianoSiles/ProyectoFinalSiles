@@ -32,39 +32,18 @@ let regresar = document.createElement("button");
 let sesionJS = JSON.parse(localStorage.getItem("sesion"));
 let noguardado = true;
 let booleanhelper = false;
+let amigoAnimal;
+let articulo;
 guardar.classList.add("display-none");
 form.onsubmit = (event) => {
     event.preventDefault();
 }
-function infoAnimales(nombre, nombreAnimal) {
-    let info;
-    switch (nombreAnimal) {
-        case "cerdo":
-            info = `'Todos los animales son iguales, pero algunos más que otros', mítica frase de George Orwell referida a los cerdos como ${nombre}. Oh, ${nombre}, que tus baños en barro dorado jamás terminen, y tu famosa frase 'Nah, no se preocupen, yo pago esta', perdure por los siglos de los siglos, Amén. Alabado sea el cerdo de ${nombre} y qué hijo de p...`
-            break;
-        case "pez payaso":
-            info = `Puedo imaginar que no muchos miembros del grupo te respetan...'Daaale, ${nombre}, vos tenés...una vez, por nosotros...'. Es cierto que tu ex dijo que habían muchos peces en el mar, y es por eso mismo que empezó por alejarse de ${nombre}, el más payaso y simp de todos.`    
-            break;
-        case "capibara":
-            info = `El animal más amistoso del mundo. Síp, ese es ${nombre}, nuestro capibara barrial; jamás tendrá problemas con nadie, montará lomos de grandes aves y domesticará los más hostiles cocodrilos: Pero ${nombre}, jamás deberá ni le deberán nada, puesto que es el perfecto capibara de nuestros corazones deudores.`    
-            break;
-        case "perezoso":
-            info = `Qué pereza. ¿No es así, ${nombre}? Armar un CV...buscar...más le vale al perezoso de ${nombre} seguir manteniendo una buena relación con sus padres, porque me contó un perezocito que quieren que se mude y pague lo que debe...`    
-            break;
-        case "rata":
-            info = `${nombre}: La rata rastrera. Podrías al menos haber pagado un peso `    
-        break;
-        case "mapache":
-            
-        break;
-    }
-    return info;
-}
-const animalesjson = [{nombre: "cerdo"}, {nombre: "pez payaso"}, {nombre: "capibara"}, {nombre: "perezoso"}, {nombre: "rata"}, {nombre: "mapache"}]
-const animales = [];
+let animales = [];
 fetch("/data/animales.json")
 .then(respuesta => respuesta.json())
-.then(data => animales = [...data]);
+.then(data => {
+    animales = [...data];
+});
 const Amigos = [];
 class Amigo {
     // ("Amigo" es un objeto que contiene los atributos de cada amigo en particular, junto con un método.
@@ -73,29 +52,30 @@ class Amigo {
     deuda;
     deudaPara;
     deudor;
-    constructor (nombre, pagoReal, pagoIdeal, deudor, info) {
+    constructor (nombre, pagoReal, pagoIdeal, deudor) {
         this.nombre = nombre;
         this.pagoReal = pagoReal;
         this.deuda = sumador (pagoIdeal, -this.pagoReal);
-        this.deudaPara = -this.deuda;
-        // (Si su deuda es negativa, se multiplica por -1 y es lo que le deben, es decir, la deuda para con él, no de él. Eso es deudaPara.)
+        this.deudaPara = -this.deuda; // (Si su deuda es negativa, se multiplica por -1 y es lo que le deben, es decir, la deuda para con él, no de él. Eso es deudaPara.)
         this.deudor = deudor;        
-        this.nombreAnimal = nombreAnimal;
-        this.info = info;        
+        this.nombreAnimal = "animalTemporal";
+        this.imagenAnimal = "/SuperSammy-original/multimedia/cerdo.png";
+        this.info = "infoTemporal";        
     }
     ifAcreedor1 (deudaTotal) {
         // (Si el usuario es acreedor, quiere decir que su deuda es negativa o vale cero, es decir, que le deben dinero o no pero no tiene deuda.)
         return new Promise ((resolve, reject) => {
             if (this.deuda < 0 || this.deuda == 0) {
-                resolve(sumador (deudaTotal, this.deudaPara));
+                let varDeudaTotal = sumador (deudaTotal, this.deudaPara)
+                resolve(varDeudaTotal);
                 // (La variable deudor, por otro lado, es un booleano que define si la persona es deudora o no.)
             } else {
                 reject(deudaTotal);
             }
         })
     }
-    queAnimalEs () {
-        if (this.deudor) {
+    queAnimalEs (pagoIdeal) {
+        if (this.deudor == true) {
             if (this.pagoReal > 0) {
                 this.nombreAnimal = "perezoso";
             } else if (this.pagoReal == 0) {
@@ -104,14 +84,18 @@ class Amigo {
                 this.nombreAnimal = "mapache";
             }
         } else {
-            if (this.pagoReal == total) {
+            if (this.pagoReal == total.value) {
                 this.nombreAnimal = "cerdo";
             } else if (this.pagoReal > pagoIdeal) {
                 this.nombreAnimal = "pez payaso";
             } else if (this.pagoReal == pagoIdeal) {
-                this.nombreAnimal = "pez payaso";
+                this.nombreAnimal = "capibara";
             }
         }
+        amigoAnimal = animales.find(animal => animal.nombre == this.nombreAnimal);
+        this.imagenAnimal = amigoAnimal.imagen;
+        console.log(this.nombreAnimal);
+        console.log(this.imagenAnimal);
     }
     infoAnimales() {
         let info;
@@ -176,16 +160,24 @@ function ifAcreedor2 (deudaParaY, uldeudas) {
     }
     uldeudas.append(lideben);         
 }
+function articuloAnimales(animal) {
+    if (animal == "rata" ) {
+        articulo = "La";
+    } else {
+        articulo = "El";
+    }
+}
 function mostrarDatos (amigosLength, amigos, deudaTotal, ) {
     let article4 = document.createElement("article");
     historialSection.append(article4);
-    for (let m = 0; m < amigosLength; m++) {
+    for (let m = 0; m < amigosLength; m++) { //for
         let tarjetaHistorial = document.createElement("div");
         historialSection.append(tarjetaHistorial);
         let objetoM = amigos[m];
+        articuloAnimales(objetoM.nombreAnimal);
         let uldeudas = document.createElement("ul");
         let amigocartel = document.createElement("h2");
-        amigocartel.innerText = `Amigo N°${m+1}: ${objetoM.nombre}`;
+        amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`;
         tarjetaHistorial.append(amigocartel);
         tarjetaHistorial.append(uldeudas);
         article4.append(tarjetaHistorial);
@@ -206,13 +198,11 @@ function mostrarDatos (amigosLength, amigos, deudaTotal, ) {
 }
 mostrarHistorial.addEventListener("click", ()=>{
   let sesionJS = JSON.parse(localStorage.getItem("sesion"));
-  console.log(sesionJS);
   if (sesionJS !== null) {
     sesion = [];
     for (let p = 0; p < sesionJS.length; p++) {
       sesion.push(sesionJS[p]);
     }
-    console.log(sesion);
     historialSection.innerHTML = "";
     historialSection.classList.remove("display-none");
     for (let q = 0; q < sesion.length; q++) {
@@ -342,22 +332,24 @@ ok3.addEventListener("click", ()=>{
                     varCargar.disabled = true;
                     let amigoVar = new Amigo (varNombre.value, varPago.value, pagoIdeal, true);
                     amigoVar.ifAcreedor1 (deudaTotal)
-                    .then(respuesta => {
+                    .then((respuesta) => {
                         amigoVar.deudor = false;
                         deudaTotal = respuesta;
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         amigoVar.deudor = true;
                         deudaTotal = error;
                     });
-                    amigoVar.nombreAnimal = amigoVar.queAnimalEs();
-                    amigoVar.info = amigoVar.infoAnimales();
-                    Amigos.push (amigoVar);
-                    if (Amigos.length == cantAmigos.value) {                       
-                        calcular.classList.remove("display-none");
-                        aside.classList.add("display-none");
-                        article3.append(calcular);                
-                    }
+                    setTimeout(() => {
+                        amigoVar.queAnimalEs(pagoIdeal);
+                        amigoVar.info = amigoVar.infoAnimales();
+                        Amigos.push (amigoVar);
+                        if (Amigos.length == cantAmigos.value) {                       
+                            calcular.classList.remove("display-none");
+                            aside.classList.add("display-none");
+                            article3.append(calcular);                
+                        }
+                    }, 0);
                 } else if (totalReal > total.value) {
                     totalReal = sumador(totalReal, -parseFloat(varPago.value));
                     perroraside.innerText = `ERROR. Ha sobrepasado el total estipulado. ${intentar}`;
@@ -379,9 +371,10 @@ ok3.addEventListener("click", ()=>{
                 for (let m = 0; m <= Amigos.length-1; m++) {
                     conjuntoTarjetas[m].innerHTML = "";
                     let objetoM = Amigos[m];
+                    articuloAnimales(objetoM.nombreAnimal);
                     let uldeudas = document.createElement("ul");
                     let amigocartel = document.createElement("h2");
-                    amigocartel.innerText = `Amigo N°${m+1}: ${objetoM.nombre}`
+                    amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`
                     conjuntoTarjetas[m].append(amigocartel);
                     conjuntoTarjetas[m].append(uldeudas);       
                     if (objetoM.deudor == false) {
@@ -414,8 +407,6 @@ ok3.addEventListener("click", ()=>{
                       }       
                     }
                     let nuevoHistorial = new historial(cantAmigos.value, total.value, Amigos, Amigos.length, deudaTotal);
-                    console.log(deudaTotal);
-                    console.log(nuevoHistorial);
                     sesion.unshift(nuevoHistorial);
                     localStorage.removeItem("sesion");
                     localStorage.setItem("sesion", JSON.stringify(sesion));
@@ -472,3 +463,65 @@ if (booleanhelper == true) {
     article1.classList.remove("display-none");
 }
 })
+
+
+// // For de calcular
+// for (let m = 0; m <= Amigos.length-1; m++) {
+//     conjuntoTarjetas[m].innerHTML = "";
+//     let objetoM = Amigos[m];
+//     let uldeudas = document.createElement("ul");
+//     let amigocartel = document.createElement("h2");
+//     articuloAnimales(objetoM.nombreAnimal);
+//     amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`
+//     conjuntoTarjetas[m].append(amigocartel);
+//     conjuntoTarjetas[m].append(uldeudas);       
+//     if (objetoM.deudor == false) {
+//         ifAcreedor2 (objetoM.deudaPara, uldeudas);
+//     } else {       
+//         for (let n = 0; n < Amigos.length; n++) {
+//             while (n != m && n < Amigos.length) {
+//                 let objetoN = Amigos[n];
+//                  ifSegundosCases (objetoN.deudor, objetoM.deuda, objetoN.deudaPara, objetoN.nombre, deudaTotal, uldeudas);
+//                  // (He cargado dos variables distintas que contienen los objetos originarios del array "Amigos", para separar en parámetros
+//                  // a las propiedades pertenecientes al deudor (con objetoM) de las pertenecientes a los acreedores (con objetoN). Esto gracias, además, a las condiciones del while contenedor.)
+//                 n++;
+//             }
+//         }
+//     }
+// }
+// // For de mostrarDatos
+// for (let m = 0; m < amigosLength; m++) {
+//     let tarjetaHistorial = document.createElement("div");
+//     historialSection.append(tarjetaHistorial);
+//     let objetoM = amigos[m];
+//     let uldeudas = document.createElement("ul");
+//     let amigocartel = document.createElement("h2");
+//     articuloAnimales(objetoM.nombreAnimal);
+//     amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`;
+//     tarjetaHistorial.append(amigocartel);
+//     tarjetaHistorial.append(uldeudas);
+//     article4.append(tarjetaHistorial);
+//     if (objetoM.deudor == false) {
+//         ifAcreedor2 (objetoM.deudaPara, uldeudas);
+//     } else {
+//         for (let n = 0; n < amigos.length; n++) {
+//             while (n != m && n < amigos.length) {
+//                 let objetoN = amigos[n];
+//                  ifSegundosCases (objetoN.deudor, objetoM.deuda, objetoN.deudaPara, objetoN.nombre, deudaTotal, uldeudas);
+//                  // (He cargado dos variables distintas que contienen los objetos originarios del array "Amigos", para separar en parámetros
+//                  // a las propiedades pertenecientes al deudor (con objetoM) de las pertenecientes a los acreedores (con objetoN). Esto gracias, además, a las condiciones del while contenedor.)
+//                 n++;
+//             }
+//         }
+//     }
+// }
+
+// function forMostrar(protoAmigos, protoTarjetas, ) {
+//     let objetoM = amigos[m];
+//     let uldeudas = document.createElement("ul");
+//     let amigocartel = document.createElement("h2");
+//     articuloAnimales(objetoM.nombreAnimal);
+//     amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`;
+//     tarjetaHistorial.append(amigocartel);
+//     tarjetaHistorial.append(uldeudas);
+// }
