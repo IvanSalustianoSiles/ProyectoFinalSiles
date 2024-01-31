@@ -1,26 +1,32 @@
 [
     {
         "nombre": "cerdo",
-        "imagen": "./multimedia/cerdo.png"
+        "imagen": "./multimedia/cerdo.png",
+        "color": "#EA8C09"
     },
     {
-        "nombre": "pez payaso",
-        "imagen": "./multimedia/pez-payaso.png"
+        "nombre": "pez-payaso",
+        "imagen": "./multimedia/pez-payaso.png",
+        "color": "#da3030"
     },
     {
         "nombre": "capibara",
-        "imagen": "./multimedia/capibara.png"
+        "imagen": "./multimedia/capibara.png",
+        "color": "#5de3d8"
     },
     {
         "nombre": "perezoso",
-        "imagen": "./multimedia/perezoso.png"
+        "imagen": "./multimedia/perezoso.png",
+        "color": "#216c8e"
     },
     {
         "nombre": "rata",
-        "imagen": "./multimedia/rata.png"
+        "imagen": "./multimedia/rata.png",
+        "color": "#803b8b"
     },
     {
         "nombre": "mapache",
-        "imagen": "./multimedia/mapache.png"
+        "imagen": "./multimedia/mapache.png",
+        "color": "#FB8C8C"
     }
 ]
