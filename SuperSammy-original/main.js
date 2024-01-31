@@ -448,6 +448,15 @@ ok3.addEventListener("click", ()=>{
                                 }                  
                             })
                         })
+                    } else {
+                        Swal.fire({
+                            title: "Regresando...",
+                            imageUrl: "./multimedia/seria5.jpeg",
+                            imageWidth: 350,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        })
                     }
                 })
             } else {
