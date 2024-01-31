@@ -98,25 +98,25 @@ class Amigo {
         console.log(this.imagenAnimal);
     }
     infoAnimales() {
-        let info;
+        let info = [];
         switch (this.nombreAnimal) {
             case "cerdo":
-                info = `'Todos los animales son iguales, pero algunos más que otros', mítica frase de George Orwell referida a los cerdos como ${this.nombre}. Oh, ${this.nombre}, que tus baños en barro dorado jamás terminen, y tu famosa frase 'Nah, no se preocupen, yo pago esta', perdure por los siglos de los siglos, Amén. Alabado sea el cerdo de ${this.nombre} y qué hijo de p...`
+                info = [`"Todos los animales son iguales, pero algunos más que otros"`, `Mítica frase de George Orwell referida a los cerdos como ${this.nombre}. Oh, ${this.nombre}, que tus baños en barro dorado jamás terminen, y tu famosa frase 'Nah, no se preocupen, yo pago esta', perdure por los siglos de los siglos, Amén. Alabado sea el cerdo de ${this.nombre} y qué hijo de p...`];
                 break;
             case "pez payaso":
-                info = `Puedo imaginar que no muchos miembros del grupo te respetan...'Daaale, ${this.nombre}, vos tenés...una vez, por nosotros...'. Es cierto que tu ex dijo que habían muchos peces en el mar, y es por eso mismo que empezó por alejarse de ${this.nombre}, el más payaso y simp de todos.`    
+                info = [`Puedo imaginar que no muchos miembros del grupo te respetan...`, `"Daaale, ${this.nombre}, vos tenés...una vez, por nosotros...". Es cierto que tu ex dijo que habían muchos peces en el mar, y es por eso mismo que empezó por alejarse de ${this.nombre}, el más payaso y simp de todos.`];    
                 break;
             case "capibara":
-                info = `El animal más amistoso del mundo. Síp, ese es ${this.nombre}, nuestro capibara barrial; jamás tendrá problemas con nadie, montará lomos de grandes aves y domesticará los más hostiles cocodrilos: Pero ${this.nombre}, jamás deberá ni le deberán nada, puesto que es el perfecto capibara de nuestros corazones deudores.`    
+                info = [`El animal más amistoso del mundo.`, `Síp, ese es ${this.nombre}, nuestro capibara barrial; jamás tendrá problemas con nadie, montará lomos de grandes aves y domesticará los más hostiles cocodrilos: Pero ${this.nombre}, jamás deberá ni le deberán nada, puesto que es el perfecto capibara de nuestros corazones deudores.`];
                 break;
             case "perezoso":
-                info = `Qué pereza. ¿No es así, ${this.nombre}? Armar un CV...buscar...más le vale al perezoso de ${this.nombre} seguir manteniendo una buena relación con sus padres, porque me contó un perezocito que quieren que se mude y pague lo que debe...`    
+                info = [`Qué pereza. ¿No es así, ${this.nombre}?`, `Armar un CV...buscar...más le vale al perezoso de ${this.nombre} seguir manteniendo una buena relación con sus padres, porque me contó un perezocito que quieren que se mude y pague lo que debe...`];
                 break;
             case "rata":
-                info = `${this.nombre}: La rata rastrera. Podrías al menos haber pagado un peso, con lo devaluado que está, pero parece que a ${this.nombre} le fascinan las trampas de queso.`    
+                info = [`${this.nombre}: La rata rastrera.`, `Podrías al menos haber pagado un peso, con lo devaluado que está, pero parece que a ${this.nombre} le fascinan las trampas de queso.`];
             break;
             case "mapache":
-                info = `Sucio, delincuente: ${this.nombre}. Veo una pasión por parte de ${this.nombre} de urgar en la basura de los demás. No sólo tuvo el gran gesto de no pagar, sino de robarle a sus amigos por fuera de este pago...${this.nombre} es un animal muy tierno a la vista, porque roba hasta tu atención.`    
+                info = [`RAE: "[...]Sucio, delincuente; ${this.nombre}."`, `Veo una pasión por parte de ${this.nombre} de urgar en la basura de los demás. No sólo tuvo el gran gesto de no pagar, sino de robarle a sus amigos por fuera de este pago...${this.nombre} es un animal muy tierno a la vista, porque roba hasta tu atención.`];    
             break;
         }
         return info;
@@ -171,6 +171,19 @@ function mostrarDatos(protoAmigos, m, deudaTotal) {
     let objetoM = protoAmigos[m];
     let uldeudas = document.createElement("ul");
     let amigocartel = document.createElement("h2");
+    let fotoAnimal = document.createElement("img");
+    let verMas = document.createElement("button");
+    console.log(objetoM.info);
+    verMas.innerText = "ver más";
+    verMas.addEventListener("click",() => {
+        Swal.fire({
+            title: `${objetoM.info[0]}`,
+            text: `${objetoM.info[1]}`,
+            imageUrl: `${objetoM.imagenAnimal}`,
+        })
+    })
+    fotoAnimal.setAttribute("src", `${objetoM.imagenAnimal}`);
+    fotoAnimal.classList.add("imagen-animal");
     articuloAnimales(objetoM.nombreAnimal);
     amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`;
     if (objetoM.deudor == false) {
@@ -186,7 +199,7 @@ function mostrarDatos(protoAmigos, m, deudaTotal) {
             }
         }
     }
-    return [uldeudas, amigocartel];
+    return [amigocartel, fotoAnimal, uldeudas, verMas];
 }
 mostrarHistorial.addEventListener("click", ()=>{
   let sesionJS = JSON.parse(localStorage.getItem("sesion"));
@@ -205,8 +218,10 @@ mostrarHistorial.addEventListener("click", ()=>{
         for (let m = 0; m < varSesion.amigosLength; m++) {
             let tarjetaHistorial = document.createElement("div");
             let varMostrarDatos = mostrarDatos(varSesion.amigos, m, varSesion.deudaTotal);
-            tarjetaHistorial.append(varMostrarDatos[1]);
             tarjetaHistorial.append(varMostrarDatos[0]);
+            tarjetaHistorial.append(varMostrarDatos[1]);
+            tarjetaHistorial.append(varMostrarDatos[2]);
+            tarjetaHistorial.append(varMostrarDatos[3]);
             historialSection.append(tarjetaHistorial);
             article4.append(tarjetaHistorial);
         }
@@ -368,47 +383,124 @@ ok3.addEventListener("click", ()=>{
             })
         }
         calcular.addEventListener("click", () =>{
-            if (totalReal == parseFloat(total.value)) {
-                booleanhelper = true;
-                for (let m = 0; m <= Amigos.length-1; m++) {
-                    conjuntoTarjetas[m].innerHTML = "";
-                    let varMostrarDatos2 = mostrarDatos(Amigos, m, deudaTotal);
-                    conjuntoTarjetas[m].append(varMostrarDatos2[1]);
-                    conjuntoTarjetas[m].append(varMostrarDatos2[0]);
-                }
-                article3.append(reiniciar);
-                article3.append(mostrarHistorial);
-                calcular.classList.add("display-none");
-                reiniciar.classList.remove("display-none");
-                reiniciar.addEventListener("click", () =>{
-                  window.location.reload();
-                })
-                guardar.addEventListener("click", ()=>{
-                  if (noguardado == true) {
-                    if (sesionJS !== null) {
-                      sesion = [];
-                      for (let p = 0; p < sesionJS.length; p++) {
-                        sesion.push(sesionJS[p]);
-                      }       
+            if (totalReal == parseFloat(total.value)){
+                Swal.fire ({
+                    title: "¿Listo para conocer de verdad a los animales de tus amigos?",
+                    imageUrl: "./multimedia/carrusel-sammy9.jpeg",
+                    imageWidth: 350,
+                    confirmButtonText: "Sí",
+                    confirmButtonColor: "#52d639",
+                    showCancelButton: true,
+                    cancelButtonColor: "#FF0000"
+                }).then(respuesta => {
+                    if (respuesta.isConfirmed) {
+                        Swal.fire({
+                            title: "Calculando...",
+                            imageUrl: "./multimedia/carrusel-sammy11.jpeg",
+                            imageWidth: 400,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        }).then(respuesta=>{
+                            booleanhelper = true;
+                            for (let m = 0; m <= Amigos.length-1; m++) {
+                                conjuntoTarjetas[m].innerHTML = "";
+                                let varMostrarDatos2 = mostrarDatos(Amigos, m, deudaTotal);
+                                conjuntoTarjetas[m].append(varMostrarDatos2[0]);
+                                conjuntoTarjetas[m].append(varMostrarDatos2[1]);
+                                conjuntoTarjetas[m].append(varMostrarDatos2[2]);
+                                conjuntoTarjetas[m].append(varMostrarDatos2[3]);
+                            }
+                            article3.append(reiniciar);
+                            article3.append(mostrarHistorial);
+                            calcular.classList.add("display-none");
+                            reiniciar.classList.remove("display-none");
+                            reiniciar.addEventListener("click", () =>{
+                              window.location.reload();
+                            })
+                            guardar.innerText = `GUARDAR EN HISTORIAL`;
+                            guardar.classList.remove("display-none");
+                            article3.append(guardar);
+                            guardar.addEventListener("click", ()=>{
+                                if (noguardado == true) {
+                                    if (sesionJS !== null) {
+                                        sesion = [];
+                                        for (let p = 0; p < sesionJS.length; p++) {
+                                            sesion.push(sesionJS[p]);
+                                        }       
+                                    }
+                                    let nuevoHistorial = new historial(cantAmigos.value, total.value, Amigos, Amigos.length, deudaTotal);
+                                    sesion.unshift(nuevoHistorial);
+                                    localStorage.removeItem("sesion");
+                                    localStorage.setItem("sesion", JSON.stringify(sesion));
+                                    historialSection.innerHTML = "";
+                                    noguardado = false;
+                                  } else {
+                                    Swal.fire({
+                                        title: "Lo sentimos :(",
+                                        text: "Ya has guardado tu historial.",
+                                        imageUrl: "./multimedia/seria3.jpeg",
+                                        imageWidth: 350,
+                                        confirmButtonColor: "#52d639",
+                                        backdrop:`
+                                        rgba(82, 214, 57, 0.8)`,                                           
+                                    })
+                                }                  
+                            })
+                        })
                     }
-                    let nuevoHistorial = new historial(cantAmigos.value, total.value, Amigos, Amigos.length, deudaTotal);
-                    sesion.unshift(nuevoHistorial);
-                    localStorage.removeItem("sesion");
-                    localStorage.setItem("sesion", JSON.stringify(sesion));
-                    historialSection.innerHTML = "";
-                    noguardado = false;
-                  } else {
-                    Swal.fire({
-                      title: "Lo sentimos :(",
-                      text: "Ya has guardado tu historial.",
-                      imageUrl: "./multimedia/seria3.jpeg",
-                      imageWidth: 350,
-                      confirmButtonColor: "#52d639",
-                      backdrop:`
-                      rgba(82, 214, 57, 0.8)`,                                           
-                    })
-                  }                   
                 })
+                // Swal.fire({
+                //     title: "Calculando...",
+                //     imageUrl: "./multimedia/carrusel-sammy11.jpeg",
+                //     imageWidth: 400,
+                //     timer: 3000,
+                //     timerProgressBar: true,
+                //     showConfirmButton: false
+                // }).then(respuesta=>{
+                //     booleanhelper = true;
+                //     for (let m = 0; m <= Amigos.length-1; m++) {
+                //         conjuntoTarjetas[m].innerHTML = "";
+                //         let varMostrarDatos2 = mostrarDatos(Amigos, m, deudaTotal);
+                //         conjuntoTarjetas[m].append(varMostrarDatos2[0]);
+                //         conjuntoTarjetas[m].append(varMostrarDatos2[1]);
+                //         conjuntoTarjetas[m].append(varMostrarDatos2[2]);
+                //         conjuntoTarjetas[m].append(varMostrarDatos2[3]);
+                //     }
+                //     article3.append(reiniciar);
+                //     article3.append(mostrarHistorial);
+                //     calcular.classList.add("display-none");
+                //     reiniciar.classList.remove("display-none");
+                //     reiniciar.addEventListener("click", () =>{
+                //       window.location.reload();
+                //     })
+                //     guardar.addEventListener("click", ()=>{
+                //       if (noguardado == true) {
+                //         if (sesionJS !== null) {
+                //           sesion = [];
+                //           for (let p = 0; p < sesionJS.length; p++) {
+                //             sesion.push(sesionJS[p]);
+                //           }       
+                //         }
+                //         let nuevoHistorial = new historial(cantAmigos.value, total.value, Amigos, Amigos.length, deudaTotal);
+                //         sesion.unshift(nuevoHistorial);
+                //         localStorage.removeItem("sesion");
+                //         localStorage.setItem("sesion", JSON.stringify(sesion));
+                //         historialSection.innerHTML = "";
+                //         noguardado = false;
+                //       } else {
+                //         Swal.fire({
+                //           title: "Lo sentimos :(",
+                //           text: "Ya has guardado tu historial.",
+                //           imageUrl: "./multimedia/seria3.jpeg",
+                //           imageWidth: 350,
+                //           confirmButtonColor: "#52d639",
+                //           backdrop:`
+                //           rgba(82, 214, 57, 0.8)`,                                           
+                //         })
+                //       }                   
+                //     })
+                // })
             } else {
                 perrorarticle.innerText = `El total original estipulado (${total.value}) difiere del monto sumado entre sus compañeros (${totalReal}). ${intentar}`;
                 perrorarticle.classList.remove("display-none");
@@ -425,18 +517,115 @@ ok3.addEventListener("click", ()=>{
                     calcular.classList.add("display-none");
                     aside.classList.remove("display-none");
                     for (let l = 0; l < conjuntoTarjetas.length; l++) {
-                        varPago = document.querySelector(`#inp2${l+1}`);
+                        let varPago = document.querySelector(`#inp2${l+1}`);
                         varPago.value = "";
                         varPago.disabled = false;
-                        varCargar = document.querySelector(`#inp3${l+1}`);
+                        let varCargar = document.querySelector(`#inp3${l+1}`);
                         varCargar.disabled = false;
                     }
-                })                
+                }) 
             }
-            guardar.innerText = `GUARDAR EN HISTORIAL`;
-            guardar.classList.remove("display-none");
-            article3.append(guardar);
-        })                     
+        })
+            // Swal.fire({
+            //     title: "¿Listo para conocer de verdad a los animales de tus amigos?",
+            //     imageUrl: "./multimedia/carrusel-sammy9.jpeg",
+            //     imageWidth: 350,
+            //     confirmButtonText: "Sí",
+            //     confirmButtonColor: "#52d639",
+            //     showCancelButton: true,
+            //     cancelButtonColor: "#FF0000"
+            // }).then(respuesta => {
+            //     if (respuesta.isConfirmed) {
+            //         Swal.fire({
+            //             title: "Calculando...",
+            //             imageUrl: "./multimedia/carrusel-sammy11.jpeg",
+            //             imageWidth: 400,
+            //             timer: 3000,
+            //             timerProgressBar: true,
+            //             showConfirmButton: false
+            //         }).then(respuesta=>{
+            //             if (totalReal == parseFloat(total.value)) {
+            //                 booleanhelper = true;
+            //                 for (let m = 0; m <= Amigos.length-1; m++) {
+            //                     conjuntoTarjetas[m].innerHTML = "";
+            //                     let varMostrarDatos2 = mostrarDatos(Amigos, m, deudaTotal);
+            //                     conjuntoTarjetas[m].append(varMostrarDatos2[0]);
+            //                     conjuntoTarjetas[m].append(varMostrarDatos2[1]);
+            //                     conjuntoTarjetas[m].append(varMostrarDatos2[2]);
+            //                     conjuntoTarjetas[m].append(varMostrarDatos2[3]);
+            //                 }
+            //                 article3.append(reiniciar);
+            //                 article3.append(mostrarHistorial);
+            //                 calcular.classList.add("display-none");
+            //                 reiniciar.classList.remove("display-none");
+            //                 reiniciar.addEventListener("click", () =>{
+            //                   window.location.reload();
+            //                 })
+            //                 guardar.addEventListener("click", ()=>{
+            //                   if (noguardado == true) {
+            //                     if (sesionJS !== null) {
+            //                       sesion = [];
+            //                       for (let p = 0; p < sesionJS.length; p++) {
+            //                         sesion.push(sesionJS[p]);
+            //                       }       
+            //                     }
+            //                     let nuevoHistorial = new historial(cantAmigos.value, total.value, Amigos, Amigos.length, deudaTotal);
+            //                     sesion.unshift(nuevoHistorial);
+            //                     localStorage.removeItem("sesion");
+            //                     localStorage.setItem("sesion", JSON.stringify(sesion));
+            //                     historialSection.innerHTML = "";
+            //                     noguardado = false;
+            //                   } else {
+            //                     Swal.fire({
+            //                       title: "Lo sentimos :(",
+            //                       text: "Ya has guardado tu historial.",
+            //                       imageUrl: "./multimedia/seria3.jpeg",
+            //                       imageWidth: 350,
+            //                       confirmButtonColor: "#52d639",
+            //                       backdrop:`
+            //                       rgba(82, 214, 57, 0.8)`,                                           
+            //                     })
+            //                   }                   
+            //                 })
+            //             } else {
+            //                 perrorarticle.innerText = `El total original estipulado (${total.value}) difiere del monto sumado entre sus compañeros (${totalReal}). ${intentar}`;
+            //                 perrorarticle.classList.remove("display-none");
+            //                 article3.append(perrorarticle);
+            //                 let okdifiere = document.createElement("button");
+            //                 okdifiere.innerText = `OK`;
+            //                 article3.append(okdifiere);
+            //                 okdifiere.addEventListener("click", () => {
+            //                     perrorarticle.classList.add("display-none");
+            //                     okdifiere.classList.add("display-none");
+            //                     totalReal = 0;
+            //                     p2aside.innerText = `Monto actual: ${totalReal}`;
+            //                     Amigos.splice(0, Amigos.length);
+            //                     calcular.classList.add("display-none");
+            //                     aside.classList.remove("display-none");
+            //                     for (let l = 0; l < conjuntoTarjetas.length; l++) {
+            //                         varPago = document.querySelector(`#inp2${l+1}`);
+            //                         varPago.value = "";
+            //                         varPago.disabled = false;
+            //                         varCargar = document.querySelector(`#inp3${l+1}`);
+            //                         varCargar.disabled = false;
+            //                     }
+            //                 })                
+            //             }
+            //             guardar.innerText = `GUARDAR EN HISTORIAL`;
+            //             guardar.classList.remove("display-none");
+            //             article3.append(guardar);
+            //         })
+            //     } else {
+            //         Swal.fire({
+            //             title: "Regresando...",
+            //             imageUrl: "./multimedia/seria5.jpeg",
+            //             imageWidth: 350,
+            //             timer: 2000,
+            //             timerProgressBar: true,
+            //             showConfirmButton: false
+            //         })
+            //     }
+            // })                     
     }
 })
 regresar.addEventListener("click", ()=>{

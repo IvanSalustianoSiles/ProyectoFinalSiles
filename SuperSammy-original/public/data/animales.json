@@ -1,26 +1,26 @@
 [
     {
         "nombre": "cerdo",
-        "imagen": "/SuperSammy-original/multimedia/cerdo.png"
+        "imagen": "./multimedia/cerdo.png"
     },
     {
         "nombre": "pez payaso",
-        "imagen": "/SuperSammy-original/multimedia/pez-payaso.png"
+        "imagen": "./multimedia/pez-payaso.png"
     },
     {
         "nombre": "capibara",
-        "imagen": "/SuperSammy-original/multimedia/capibara.png"
+        "imagen": "./multimedia/capibara.png"
     },
     {
         "nombre": "perezoso",
-        "imagen": "/SuperSammy-original/multimedia/perezoso.png"
+        "imagen": "./multimedia/perezoso.png"
     },
     {
         "nombre": "rata",
-        "imagen": "/SuperSammy-original/multimedia/rata.png"
+        "imagen": "./multimedia/rata.png"
     },
     {
         "nombre": "mapache",
-        "imagen": "/SuperSammy-original/multimedia/mapache.png"
+        "imagen": "./multimedia/mapache.png"
     }
 ]

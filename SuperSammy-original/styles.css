@@ -12,3 +12,7 @@
 .display-none {
   display: none  !important;
 }
+.imagen-animal {
+  width: 400px;
+  border-radius: 6px;
+}
