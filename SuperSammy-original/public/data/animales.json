@@ -2,31 +2,31 @@
     {
         "nombre": "cerdo",
         "imagen": "./multimedia/cerdo.png",
-        "color": "#EA8C09"
+        "color": "rgba(234, 140, 9, 0.8)"
     },
     {
         "nombre": "pez-payaso",
         "imagen": "./multimedia/pez-payaso.png",
-        "color": "#da3030"
+        "color": "rgba(218, 48, 48, 0.8)"
     },
     {
         "nombre": "capibara",
         "imagen": "./multimedia/capibara.png",
-        "color": "#5de3d8"
+        "color": "rgba(93, 227, 216, 0.8)"
     },
     {
         "nombre": "perezoso",
         "imagen": "./multimedia/perezoso.png",
-        "color": "#216c8e"
+        "color": "rgba(33, 108, 142, 0.8)"
     },
     {
         "nombre": "rata",
         "imagen": "./multimedia/rata.png",
-        "color": "#803b8b"
+        "color": "rgba(128, 59, 139, 0.8)"
     },
     {
         "nombre": "mapache",
         "imagen": "./multimedia/mapache.png",
-        "color": "#FB8C8C"
+        "color": "rgba(251, 140, 140, 0.8)"
     }
 ]

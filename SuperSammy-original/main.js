@@ -10,10 +10,8 @@ let article2 = document.querySelector("#article-2");
 let form = document.querySelector("#form-1");
 let divcuantosamigos = document.querySelector("#div-cuantosamigos");
 let cantAmigos = document.querySelector("#input-cuantosamigos");
-let labelerror1 = document.querySelector("#labelerror-cuantosamigos");
 let divtotal = document.querySelector("#div-total");
 let total = document.querySelector("#input-total");
-let labelerror2 = document.querySelector("#labelerror-total");
 let article3 = document.querySelector("#article-tarjeta");
 let calcular = document.querySelector("#calcular");
 let reiniciar = document.querySelector("#reiniciar");
@@ -24,9 +22,6 @@ let labeltotal = document.querySelector("#label-total");
 let aside = document.querySelector("aside");
 let p1aside = document.querySelector("#p1-aside");
 let p2aside = document.querySelector("#p2-aside");
-let perroraside = document.querySelector("#perror-aside");
-let perror2aside = document.querySelector("#perror2-aside");
-let perrorarticle = document.querySelector("#perror-article");
 let guardar = document.createElement("button");
 let regresar = document.createElement("button");
 let sesionJS = JSON.parse(localStorage.getItem("sesion"));
@@ -35,10 +30,10 @@ let booleanhelper = false;
 let amigoAnimal;
 let articulo;
 guardar.classList.add("display-none");
+let animales = [];
 form.onsubmit = (event) => {
     event.preventDefault();
 }
-let animales = [];
 fetch("/data/animales.json")
 .then(respuesta => respuesta.json())
 .then(data => {
@@ -146,7 +141,8 @@ function ifSegundosCases (deudorX, deudaN, deudaParaX, nombreX, deudaTotal, ulde
         let deudaNAX = deudaN * deudaParaX / deudaTotal;
         if (deudaNAX > 0) {            
             let lidebe = document.createElement("li");
-            lidebe.innerText = `- Debe ${Math.round(deudaNAX)} pesos a ${nombreX}.` 
+            lidebe.innerText = `- Debe ${Math.round(deudaNAX)} pesos a`;
+            lidebe.append(nombreX);
             uldeudas.append(lidebe);         
         }
     }
@@ -186,20 +182,29 @@ function mostrarDatos(protoAmigos, m, deudaTotal) {
             imageUrl: `${objetoM.imagenAnimal}`,
             customClass: {
                 title: `${objetoM.nombreAnimal}`,
-            }
+            },
+            backdrop:`${objetoM.colorAnimal}`
         })
     })
     fotoAnimal.setAttribute("src", `${objetoM.imagenAnimal}`);
     fotoAnimal.classList.add("imagen-animal");
     articuloAnimales(objetoM.nombreAnimal);
-    amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${objetoM.nombreAnimal}`;
+    let animalMostrado = objetoM.nombreAnimal;
+    if (objetoM.nombreAnimal == "pez-payaso") {
+        animalMostrado = "pez payaso";
+    }
+    amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${animalMostrado}`;
     if (objetoM.deudor == false) {
         ifAcreedor2 (objetoM.deudaPara, uldeudas);
     } else {
         for (let n = 0; n < protoAmigos.length; n++) {
             while (n != m && n < protoAmigos.length) {
                 let objetoN = protoAmigos[n];
-                 ifSegundosCases (objetoN.deudor, objetoM.deuda, objetoN.deudaPara, objetoN.nombre, deudaTotal, uldeudas);
+                let divNombre = document.createElement("div");
+                divNombre.innerText = `${objetoN.nombre}`;
+                divNombre.classList.add(`${objetoN.nombreAnimal}`);
+                divNombre.classList.add("div-nombre");
+                 ifSegundosCases (objetoN.deudor, objetoM.deuda, objetoN.deudaPara, divNombre, deudaTotal, uldeudas);
                  // (He cargado dos variables distintas que contienen los objetos originarios del array "Amigos", para separar en parámetros
                  // a las propiedades pertenecientes al deudor (con objetoM) de las pertenecientes a los acreedores (con objetoN). Esto gracias, además, a las condiciones del while contenedor.)
                 n++;
@@ -228,11 +233,8 @@ mostrarHistorial.addEventListener("click", ()=>{
         for (let m = 0; m < varSesion.amigosLength; m++) {
             let tarjetaHistorial = document.createElement("div");
             tarjetaHistorial.classList.add("tarjetas");
-            let varMostrarDatos = mostrarDatos(varSesion.amigos, m, varSesion.deudaTotal);
-            tarjetaHistorial.append(varMostrarDatos[0]);
-            tarjetaHistorial.append(varMostrarDatos[1]);
-            tarjetaHistorial.append(varMostrarDatos[2]);
-            tarjetaHistorial.append(varMostrarDatos[3]);
+            let [amigocartel2, fotoAnimal2, uldeudas2, verMas2] = mostrarDatos(varSesion.amigos, m, varSesion.deudaTotal);
+            tarjetaHistorial.append(amigocartel2, fotoAnimal2, uldeudas2, verMas2);
             article4.append(tarjetaHistorial);
         }
     }
@@ -249,6 +251,8 @@ mostrarHistorial.addEventListener("click", ()=>{
       text: "Aún no tienes historial.",
       imageUrl: "./multimedia/seria2.jpeg",
       imageWidth: 350,
+      backdrop:`
+      rgba(82, 214, 57, 0.8)`
     })
   }
 })
@@ -259,45 +263,39 @@ ok.addEventListener("click", ()=>{
 })
 ok2.addEventListener("click", ()=>{
     if (cantAmigos.value <= 0) {
-        labelcuantosamigos.classList.add("display-none");
-        labelerror1.innerText = `Lo sentimos, "${cantAmigos.value}" no es una cantidad válida. Debe ser un número positivo. ${intentar}`
-        cantAmigos.value = "";
-        cantAmigos.disabled = true;
-        labelerror1.classList.remove("display-none");
-        let ok21 = document.createElement("button");
-        ok21.innerText = `OK`;
-        ok2.classList.add("display-none");
-        divcuantosamigos.append(ok21);
-        ok21.addEventListener("click", () =>{
-            labelerror1.classList.add("display-none");            
-            ok21.classList.add("display-none");
-            labelcuantosamigos.classList.remove("display-none");
+        Swal.fire({
+            title: "Lo sentimos.",
+            text: `"${cantAmigos.value}" no es una cantidad válida. Debe ser un número positivo. ${intentar}`,
+            imageUrl: "./multimedia/seria4.jpeg",
+            confirmButtonColor: "#52d639",
+            timer: 4500,
+            imageWidth: 350,
+            backdrop:`
+            rgba(82, 214, 57, 0.8)`
+          }).then((respuesta) => {            
+            cantAmigos.value = "";
             ok2.classList.remove("display-none");
-            cantAmigos.disabled = false;
-        })
-     } else {
-         divcuantosamigos.classList.add("display-none");
-         divtotal.classList.remove("display-none");
+          })
+    } else {
+        divcuantosamigos.classList.add("display-none");
+        divtotal.classList.remove("display-none");
     }
 })
 ok3.addEventListener("click", ()=>{
     if (total.value <= 0) {
-        labeltotal.classList.add("display-none");
-        labelerror2.innerText = `Lo sentimos, pero "${total.value}" no es un número válido. Debe ser positivo. ${intentar}`;
-        total.value = "";
-        total.disabled = true;
-        labelerror2.classList.remove("display-none");
-        let ok31 = document.createElement("button");
-        ok31.innerText = `OK`;
-        ok3.classList.add("display-none");
-        divtotal.append(ok31);
-        ok31.addEventListener("click", () =>{
-            labelerror2.classList.add("display-none");            
-            ok31.classList.add("display-none");
-            labeltotal.classList.remove("display-none");
+        Swal.fire({
+            title: "Lo sentimos.",
+            text: `"${total.value}" no es un número válido. Debe ser positivo. ${intentar}`,
+            imageUrl: "./multimedia/seria3.jpeg",
+            confirmButtonColor: "#52d639",
+            timer: 4000,
+            imageWidth: 350,
+            backdrop:`
+            rgba(82, 214, 57, 0.8)`
+          }).then((respuesta) => {            
+            total.value = "";            
             ok3.classList.remove("display-none");
-            total.disabled = false;
-        })
+          })
     } else {
         divtotal.classList.add("display-none");
         let pagoIdeal = total.value / cantAmigos.value;
@@ -344,14 +342,14 @@ ok3.addEventListener("click", ()=>{
                         p2aside.innerText = `Monto actual: ${totalReal} (límite alcanzado)`;       
                     }
                     if (parseFloat(varPago.value) < 0) {
-                        perror2aside.innerText = `ATENCIÓN: El pago de ${varNombre.value} es menor a cero. Ten en cuenta que pagará una deuda extra a los acreedores del grupo de ${-varPago.value}.`
-                        perror2aside.classList.remove("display-none");
-                        let oknegative = document.createElement("button");
-                        oknegative.innerText = `OK`;
-                        perror2aside.append(oknegative);
-                        oknegative.addEventListener("click", () =>{
-                            perror2aside.classList.add("display-none");
-                            oknegative.classList.add("display-none");
+                        Swal.fire({
+                            title: `ATENCIÓN: El pago de ${varNombre.value} es menor a cero.`,
+                            text: `Ten en cuenta que pagará una deuda extra a los acreedores del grupo de ${-varPago.value}.`,
+                            imageUrl: "./multimedia/seria2.jpeg",
+                            confirmButtonColor: "#52d639",
+                            imageWidth: 350,
+                            backdrop:`
+                            rgba(82, 214, 57, 0.8)`
                         })
                     }
                     varNombre.disabled = true;
@@ -379,15 +377,16 @@ ok3.addEventListener("click", ()=>{
                     }, 0);
                 } else if (totalReal > total.value) {
                     totalReal = sumador(totalReal, -parseFloat(varPago.value));
-                    perroraside.innerText = `ERROR. Ha sobrepasado el total estipulado. ${intentar}`;
-                    perroraside.classList.remove("display-none");
                     varPago.value = "";
-                    let oksobrepas = document.createElement("button");
-                    oksobrepas.innerText = `OK`;
-                    perroraside.append(oksobrepas);
-                    oksobrepas.addEventListener("click", () =>{
-                        perroraside.classList.add("display-none");
-                        oksobrepas.classList.add("display-none");
+                    Swal.fire({
+                        title: "ERROR: Ha sobrepasado el total estipulado.",
+                        text: `${intentar}`,
+                        imageUrl: "./multimedia/seria5.jpeg",
+                        confirmButtonColor: "#52d639",
+                        timer: 3500,
+                        imageWidth: 350,
+                        backdrop:`
+                        rgba(82, 214, 57, 0.8)`
                     })
                 }
             })
@@ -401,7 +400,9 @@ ok3.addEventListener("click", ()=>{
                     confirmButtonText: "Sí",
                     confirmButtonColor: "#52d639",
                     showCancelButton: true,
-                    cancelButtonColor: "#FF0000"
+                    cancelButtonColor: "#FF0000",
+                    backdrop:`
+                    rgba(82, 214, 57, 0.8)`,
                 }).then(respuesta => {
                     if (respuesta.isConfirmed) {
                         Swal.fire({
@@ -410,17 +411,16 @@ ok3.addEventListener("click", ()=>{
                             imageWidth: 400,
                             timer: 3000,
                             timerProgressBar: true,
-                            showConfirmButton: false
+                            showConfirmButton: false,
+                            backdrop:`
+                            rgba(82, 214, 57, 0.8)`,
                         }).then(respuesta=>{
                             booleanhelper = true;
                             for (let m = 0; m <= Amigos.length-1; m++) {
                                 conjuntoTarjetas[m].innerHTML = "";
                                 conjuntoTarjetas[m].classList.add("tarjetas");
-                                let varMostrarDatos2 = mostrarDatos(Amigos, m, deudaTotal);
-                                conjuntoTarjetas[m].append(varMostrarDatos2[0]);
-                                conjuntoTarjetas[m].append(varMostrarDatos2[1]);
-                                conjuntoTarjetas[m].append(varMostrarDatos2[2]);
-                                conjuntoTarjetas[m].append(varMostrarDatos2[3]);
+                                let [amigocartel3, fotoAnimal3, uldeudas3, verMas3] = mostrarDatos(Amigos, m, deudaTotal);
+                                conjuntoTarjetas[m].append(amigocartel3, fotoAnimal3, uldeudas3, verMas3);
                             }
                             article3.append(reiniciar);
                             article3.append(mostrarHistorial);
@@ -466,20 +466,22 @@ ok3.addEventListener("click", ()=>{
                             imageWidth: 350,
                             timer: 2000,
                             timerProgressBar: true,
-                            showConfirmButton: false
+                            showConfirmButton: false,
+                            backdrop:`
+                            rgba(82, 214, 57, 0.8)`,
                         })
                     }
                 })
             } else {
-                perrorarticle.innerText = `El total original estipulado (${total.value}) difiere del monto sumado entre sus compañeros (${totalReal}). ${intentar}`;
-                perrorarticle.classList.remove("display-none");
-                article3.append(perrorarticle);
-                let okdifiere = document.createElement("button");
-                okdifiere.innerText = `OK`;
-                article3.append(okdifiere);
-                okdifiere.addEventListener("click", () => {
-                    perrorarticle.classList.add("display-none");
-                    okdifiere.classList.add("display-none");
+                Swal.fire({
+                    title: `ERROR.`,
+                    text: `El total original estipulado (${total.value}) difiere del monto sumado entre sus compañeros (${totalReal}). ${intentar}`,
+                    imageUrl: "./multimedia/seria5.jpeg",
+                    confirmButtonColor: "#52d639",
+                    imageWidth: 350,
+                    backdrop:`
+                    rgba(82, 214, 57, 0.8)`
+                }).then((respuesta)=>{
                     totalReal = 0;
                     p2aside.innerText = `Monto actual: ${totalReal}`;
                     Amigos.splice(0, Amigos.length);
@@ -498,11 +500,11 @@ ok3.addEventListener("click", ()=>{
     }
 })
 regresar.addEventListener("click", ()=>{
-historialSection.classList.add("display-none");
-historialSection.innerHTML = "";
-if (booleanhelper == true) {
-    article3.classList.remove("display-none");
-} else {
-    article1.classList.remove("display-none");
-}
+    historialSection.classList.add("display-none");
+    historialSection.innerHTML = "";
+    if (booleanhelper == true) {
+        article3.classList.remove("display-none");
+    } else {
+        article1.classList.remove("display-none");
+    }
 })
