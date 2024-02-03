@@ -135,11 +135,11 @@ fetch("/data/animales.json") // Utilizamos el método fetch para traer la inform
     animales = [...data]; // Almacenamos en el array animales la información recogida, mediante el metodo spread.
 });
 // Funciones
-function sumador (n1, n2) {
+function sumador (n1, n2) { // Función que suma dos números
     let resultado = n1 + n2;
     return resultado;
 }
-function ifSegundosCases (deudorX, deudaN, deudaParaX, nombreX, deudaTotal, uldeudas) {
+function ifSegundosCases (deudorX, deudaN, deudaParaX, nombreX, deudaTotal, uldeudas) { // Función que contempla si X es acreedor.
     if (deudorX == false) {
         let deudaNAX = deudaN * deudaParaX / deudaTotal;
         if (deudaNAX > 0) {            
@@ -150,7 +150,7 @@ function ifSegundosCases (deudorX, deudaN, deudaParaX, nombreX, deudaTotal, ulde
         }
     }
 }
-function ifAcreedor2 (deudaParaY, uldeudas) {
+function ifAcreedor2 (deudaParaY, uldeudas) { // Función que contempla si Y es acreedor.
     let lideben = document.createElement("li");
     if (deudaParaY > 0) {
         lideben.innerText = `- Le deben ${Math.round(deudaParaY)} pesos y no debe.` 
@@ -159,14 +159,14 @@ function ifAcreedor2 (deudaParaY, uldeudas) {
     }
     uldeudas.append(lideben);         
 }
-function articuloAnimales(animal) {
+function articuloAnimales(animal) { // Función que actualiza una variable artículo a partir del género de la palabra correspondiente al nombre del animal.
     if (animal == "rata" ) {
         articulo = "La";
     } else {
         articulo = "El";
     }
 }
-function mostrarDatos(protoAmigos, m, deudaTotal) {
+function mostrarDatos(protoAmigos, m, deudaTotal) { // Función que fundamentalmente se encarga de diseñar la muestra de los datos de los amigos.
     let objetoM = protoAmigos[m];
     let uldeudas = document.createElement("ul");
     let amigocartel = document.createElement("h2");
