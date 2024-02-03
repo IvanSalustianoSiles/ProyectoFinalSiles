@@ -1,6 +1,8 @@
+// Importaciones
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importaciones de Bootstrap (instalado).
 import 'bootstrap';
 import Swal from 'sweetalert2'; //Importación de SweetAlert.
+// Definiciones
 let intentar = `Por favor, inténtelo de nuevo.`; //Variable para agregar a strings de mensajes de error.
 let ok = document.querySelector("#ok-button"); // Botones de "OK".
 let ok2 = document.querySelector("#ok2"); 
@@ -29,17 +31,11 @@ let noguardado = true; // Variable para analizar si el historial fue guardado o 
 let booleanhelper = false; // Variable booleana para revisar si el usuario ya clickeó calcular, o no. Al llegar a su uso se explicará con más detalle.
 let amigoAnimal; // Variable que almacena un objeto, correspondiente a un animal que cumpla la condición de un método find específico en la clase Amigo. 
 let articulo; // Variable para almacenar el artículo que va delante del nombre de algún animal. Esto esencialmente para evitar expresiones como "El rata" o "La perezoso". Próximamente quizás varíe en función del usuario y no de su animal.
-guardar.classList.add("display-none");
+// Arrays
 let animales = []; // Array para cargar cierta información sobre animales (nombre, imagen, color).
-form.onsubmit = (event) => {
-    event.preventDefault(); // Prevenimos que el submit del primer form reinicie el sitio.
-}
-fetch("/data/animales.json") // Utilizamos el método fetch para traer la información de los animales desde animales.json.
-.then(respuesta => respuesta.json())
-.then(data => {
-    animales = [...data]; // Almacenamos en el array animales la información recogida, mediante el metodo spread.
-});
+let historial = []; // Array que almacena el historial completo, el conjunto de sesiones. 
 const Amigos = []; // Array para almacenar amigos.
+// Clases
 class Amigo { // Clase para definir objetos correspondientes a los atributos de cada amigo en particular.
     nombre;
     pagoReal;
@@ -118,7 +114,6 @@ class Amigo { // Clase para definir objetos correspondientes a los atributos de 
         return info;
     }
 }
-let historial = []; // Array que almacena el historial completo, el conjunto de sesiones. 
 class sesion { // Clase que dictamina los objetos que almacenarán una sesión cada uno.
     cantAmigos; // Cantidad de amigos.
     total; // Total del pago.
@@ -133,6 +128,13 @@ class sesion { // Clase que dictamina los objetos que almacenarán una sesión c
         this.deudaTotal = deudaTotal;
     }
 }
+// Fetch
+fetch("/data/animales.json") // Utilizamos el método fetch para traer la información de los animales desde animales.json.
+.then(respuesta => respuesta.json())
+.then(data => {
+    animales = [...data]; // Almacenamos en el array animales la información recogida, mediante el metodo spread.
+});
+// Funciones
 function sumador (n1, n2) {
     let resultado = n1 + n2;
     return resultado;
@@ -175,7 +177,7 @@ function mostrarDatos(protoAmigos, m, deudaTotal) {
     verMas.innerText = "ver más";
     verMas.classList.add(`${objetoM.nombreAnimal}`);
     verMas.classList.add(`ver-mas`);
-    verMas.addEventListener("click",() => {
+    verMas.addEventListener("click",() => { // Evento para ver la descripción del animal.
         Swal.fire({
             title: `${objetoM.info[0]}`,
             text: `${objetoM.info[1]}`,
@@ -214,7 +216,11 @@ function mostrarDatos(protoAmigos, m, deudaTotal) {
     }
     return [amigocartel, fotoAnimal, uldeudas, verMas];
 }
-mostrarHistorial.addEventListener("click", ()=>{
+// Eventos (la mayoría)
+form.onsubmit = (event) => {
+    event.preventDefault(); // Prevenimos que el submit del primer form reinicie el sitio.
+}
+mostrarHistorial.addEventListener("click", ()=>{ // Evento para acceder al historial.
   let historialJS = JSON.parse(localStorage.getItem("historial"));
   if (historialJS !== null) {
     historial = [];
@@ -256,12 +262,14 @@ mostrarHistorial.addEventListener("click", ()=>{
     })
   }
 })
-ok.addEventListener("click", ()=>{
+ok.addEventListener("click", ()=>{ // Evento del primer OK.
+    cantAmigos.setAttribute("type", "number");
+    total.setAttribute("type", "number");
     article1.classList.add("display-none");
     article2.classList.remove("display-none");
     divcuantosamigos.classList.remove("display-none");
 })
-ok2.addEventListener("click", ()=>{
+ok2.addEventListener("click", ()=>{ // Evento luego de ingresar la cantidad de amigos.
     if (cantAmigos.value <= 0) {
         Swal.fire({
             title: "Lo sentimos.",
@@ -281,7 +289,7 @@ ok2.addEventListener("click", ()=>{
         divtotal.classList.remove("display-none");
     }
 })
-ok3.addEventListener("click", ()=>{
+ok3.addEventListener("click", ()=>{ // Evento luego de ingresar el total del pago.
     if (total.value <= 0) {
         Swal.fire({
             title: "Lo sentimos.",
@@ -322,8 +330,8 @@ ok3.addEventListener("click", ()=>{
             cargar.setAttribute("type", "submit");
             cargar.setAttribute("value", "CARGAR");
             cargar.setAttribute("id", `inp3${i}`);
-            tarjeta.addEventListener("submit", (event) =>{
-                event.preventDefault();
+            tarjeta.addEventListener("submit", (event) =>{ 
+                event.preventDefault(); // Prevenimos que se reinicie la página al darle a este submit.
             })
             article3.append(tarjeta);
             tarjeta.append(inputNombre, inputPago, cargar);
@@ -333,7 +341,7 @@ ok3.addEventListener("click", ()=>{
             let varNombre = document.querySelector(`#inp1${j+1}`);
             let varPago = document.querySelector(`#inp2${j+1}`);
             let varCargar = document.querySelector(`#inp3${j+1}`);
-            varCargar.addEventListener("click", () =>{
+            varCargar.addEventListener("click", () =>{ // Evento de cargar el nombre y el pago de un amigo.
                 totalReal = sumador(totalReal, parseFloat(varPago.value));
                 if (totalReal <= parseFloat(total.value)) {
                     p2aside.innerText = `Monto actual: ${totalReal}`;
@@ -390,7 +398,7 @@ ok3.addEventListener("click", ()=>{
                 }
             })
         }
-        calcular.addEventListener("click", () =>{
+        calcular.addEventListener("click", () =>{ // Evento que ocurre al darle click a calcular.
             if (totalReal == parseFloat(total.value)){
                 Swal.fire ({
                     title: "¿Listo para conocer de verdad a los animales de tus amigos?",
@@ -425,13 +433,12 @@ ok3.addEventListener("click", ()=>{
                             article3.append(mostrarHistorial);
                             calcular.classList.add("display-none");
                             reiniciar.classList.remove("display-none");
-                            reiniciar.addEventListener("click", () =>{
+                            reiniciar.addEventListener("click", () =>{ // Evento de reiniciar la aplicación.
                               window.location.reload();
                             })
                             guardar.innerText = `GUARDAR EN HISTORIAL`;
-                            guardar.classList.remove("display-none");
                             article3.append(guardar);
-                            guardar.addEventListener("click", ()=>{
+                            guardar.addEventListener("click", ()=>{ // Evento de guardar la sesión en el historial.
                                 if (noguardado == true) {
                                     if (historialJS !== null) {
                                         historial = [];
@@ -498,7 +505,7 @@ ok3.addEventListener("click", ()=>{
         })                    
     }
 })
-regresar.addEventListener("click", ()=>{
+regresar.addEventListener("click", ()=>{ // Evento para regresar al historial desde donde sea que hayas estado.
     historialSection.classList.add("display-none");
     historialSection.innerHTML = "";
     if (booleanhelper == true) {
