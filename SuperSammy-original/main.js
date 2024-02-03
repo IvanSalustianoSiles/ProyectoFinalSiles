@@ -1,99 +1,100 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Importaciones de Bootstrap (instalado).
 import 'bootstrap';
-import Swal from 'sweetalert2';
-let intentar = `Por favor, inténtelo de nuevo.`;
-let ok = document.querySelector("#ok-button");
-let ok2 = document.querySelector("#ok2");
+import Swal from 'sweetalert2'; //Importación de SweetAlert.
+let intentar = `Por favor, inténtelo de nuevo.`; //Variable para agregar a strings de mensajes de error.
+let ok = document.querySelector("#ok-button"); // Botones de "OK".
+let ok2 = document.querySelector("#ok2"); 
 let ok3 = document.querySelector("#ok3");
-let article1 = document.querySelector("#article-1");
-let article2 = document.querySelector("#article-2");
-let form = document.querySelector("#form-1");
-let divcuantosamigos = document.querySelector("#div-cuantosamigos");
-let cantAmigos = document.querySelector("#input-cuantosamigos");
-let divtotal = document.querySelector("#div-total");
-let total = document.querySelector("#input-total");
-let article3 = document.querySelector("#article-tarjeta");
-let calcular = document.querySelector("#calcular");
-let reiniciar = document.querySelector("#reiniciar");
-let historialSection = document.querySelector("#historial-section");
-let mostrarHistorial = document.querySelector("#mostrar-historial");
-let labelcuantosamigos = document.querySelector("#label-cuantosamigos");
-let labeltotal = document.querySelector("#label-total");
-let aside = document.querySelector("aside");
-let p1aside = document.querySelector("#p1-aside");
-let p2aside = document.querySelector("#p2-aside");
-let guardar = document.createElement("button");
-let regresar = document.createElement("button");
-let sesionJS = JSON.parse(localStorage.getItem("sesion"));
-let noguardado = true;
-let booleanhelper = false;
-let amigoAnimal;
-let articulo;
+let article1 = document.querySelector("#article-1"); //Article dedicado a la bienvenida a la aplicación.
+let article2 = document.querySelector("#article-2"); // Article dedicado a los primeros ingresos de datos.
+let article3 = document.querySelector("#article-tarjeta"); //Article dedicado a las tarjetas, tanto su carga como su posterior renovación y muestra de datos.
+let form = document.querySelector("#form-1"); // Form contenedor de los dos primeros inputs del programa.
+let divcuantosamigos = document.querySelector("#div-cuantosamigos"); // Div contenedor del primer ingreso.
+let cantAmigos = document.querySelector("#input-cuantosamigos"); // Input del primer ingreso.
+let divtotal = document.querySelector("#div-total"); // Div contenedor del segundo ingreso.
+let total = document.querySelector("#input-total"); // Input del segundo ingreso.
+let historialSection = document.querySelector("#historial-section"); // Sección contenedora del historial, con todas sus sesiones respectivamente almacenadas.
+let mostrarHistorial = document.querySelector("#mostrar-historial"); // Botón para acceder al historial.
+let labelcuantosamigos = document.querySelector("#label-cuantosamigos"); // Label del primer input. Actualmente en desuso pero igualmente declarado para su posterior uso.
+let labeltotal = document.querySelector("#label-total"); // Label del segundo input. Actualmente en desuso pero igualmente declarado para su posterior uso.
+let aside = document.querySelector("aside"); // Aside contenedor del total estipulado y el monto actual, para que el usuario pueda recordar en el proceso de carga de datos cuánto dinero va sumando, y cotejar con el total del pago. 
+let p1aside = document.querySelector("#p1-aside"); // Primer p del aside. Muestra el total estipulado.
+let p2aside = document.querySelector("#p2-aside"); // Segundo p del aside. Muestra el monto actual.
+let calcular = document.querySelector("#calcular"); // Botón a partir de los ingresos de datos, para realizar acciones posteriores.
+let reiniciar = document.querySelector("#reiniciar"); // Botón para reiniciar la página. Recomendable guardar la información en el historial antes por obvias razones.
+let guardar = document.createElement("button"); // Botón para guardar los resultados en el historial.
+let regresar = document.createElement("button"); // Botón para regresar desde el historial a aquella parte del sitio de donde haya venido.
+let sesionJS = JSON.parse(localStorage.getItem("sesion")); // Variable que almacena el historial traido desde el local storage.
+let noguardado = true; // Variable para analizar si el historial fue guardado o no. Al llegar a su uso se explicará con más detalle.
+let booleanhelper = false; // Variable booleana para revisar si el usuario ya clickeó calcular, o no. Al llegar a su uso se explicará con más detalle.
+let amigoAnimal; // Variable que almacena un objeto, correspondiente a un animal que cumpla la condición de un método find específico en la clase Amigo. 
+let articulo; // Variable para almacenar el artículo que va delante del nombre de algún animal. Esto esencialmente para evitar expresiones como "El rata" o "La perezoso". Próximamente quizás varíe en función del usuario y no de su animal.
 guardar.classList.add("display-none");
-let animales = [];
+let animales = []; // Array para cargar cierta información sobre animales (nombre, imagen, color).
 form.onsubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevenimos que el submit del primer form reinicie el sitio.
 }
-fetch("/data/animales.json")
+fetch("/data/animales.json") // Utilizamos el método fetch para traer la información de los animales desde animales.json.
 .then(respuesta => respuesta.json())
 .then(data => {
-    animales = [...data];
+    animales = [...data]; // Almacenamos en el array animales la información recogida, mediante el metodo spread.
 });
-const Amigos = [];
-class Amigo {
-    // ("Amigo" es un objeto que contiene los atributos de cada amigo en particular, junto con un método.
+const Amigos = []; // Array para almacenar amigos.
+class Amigo { // Clase para definir objetos correspondientes a los atributos de cada amigo en particular.
     nombre;
     pagoReal;
     deuda;
     deudaPara;
     deudor;
+    nombreAnimal;
+    imagenAnimal;
+    info;
+    colorAnimal;
     constructor (nombre, pagoReal, pagoIdeal, deudor) {
-        this.nombre = nombre;
-        this.pagoReal = pagoReal;
-        this.deuda = sumador (pagoIdeal, -this.pagoReal);
-        this.deudaPara = -this.deuda; // (Si su deuda es negativa, se multiplica por -1 y es lo que le deben, es decir, la deuda para con él, no de él. Eso es deudaPara.)
-        this.deudor = deudor;        
-        this.nombreAnimal = "animalTemporal";
-        this.imagenAnimal = "/SuperSammy-original/multimedia/cerdo.png";
-        this.info = "infoTemporal";
-        this.colorAnimal = "colorTemporal";       
+        this.nombre = nombre; // Nombre del amigo.
+        this.pagoReal = pagoReal; // Pago real del amigo.
+        this.deuda = sumador (pagoIdeal, -this.pagoReal); // Deuda del amigo, obtenida a partir de la diferencia entre el pago ideal (pago promedio) y el pago real del amigo.
+        this.deudaPara = -this.deuda; // Si su deuda es negativa, se multiplica por -1 y es lo que le deben, es decir, la deuda para con él, no de él. Eso es deudaPara.
+        this.deudor = deudor; // Si el amigo es deudor o no; un booleano.    
+        this.nombreAnimal = "animalTemporal"; // El nombre del animal asignado al amigo. Esta asignación se produce en los métodos de la clase. Para este y los siguientes atributos de la clase, se presentan valores temporales.
+        this.imagenAnimal = "/SuperSammy-original/multimedia/cerdo.png"; // Imagen del animal asignado al amigo.
+        this.info = "infoTemporal"; // Descripción del animal asignado al amigo.
+        this.colorAnimal = "colorTemporal"; // Color correspondiente al animal asignado al amigo.       
     }
-    ifAcreedor1 (deudaTotal) {
-        // (Si el usuario es acreedor, quiere decir que su deuda es negativa o vale cero, es decir, que le deben dinero o no pero no tiene deuda.)
+    ifAcreedor1 (deudaTotal) { // Método que evalúa lo que sucede si el usuario es acreedor.
         return new Promise ((resolve, reject) => {
-            if (this.deuda < 0 || this.deuda == 0) {
-                let varDeudaTotal = sumador (deudaTotal, this.deudaPara)
+            if (this.deuda < 0 || this.deuda == 0) { // Si el usuario es acreedor, quiere decir que su deuda es negativa o vale cero, es decir, que le deban dinero o no, no tiene deuda.
+                let varDeudaTotal = sumador (deudaTotal, this.deudaPara) // varDeudaTotal almacena la suma entre la deuda total (suma de deudas a los acreedores) y deudaPara (deuda al acreedor específico). Esto se realizará de manera cíclica.
                 resolve(varDeudaTotal);
-                // (La variable deudor, por otro lado, es un booleano que define si la persona es deudora o no.)
             } else {
-                reject(deudaTotal);
+                reject(deudaTotal); // Si el caso de la promesa es el negativo, ifAcreedor1 nos devuelve la deuda total previa, sin cargarle la nueva deudaPara.
             }
         })
     }
-    queAnimalEs (pagoIdeal) {
-        if (this.deudor == true) {
-            if (this.pagoReal > 0) {
-                this.nombreAnimal = "perezoso";
-            } else if (this.pagoReal == 0) {
-                this.nombreAnimal = "rata";
+    queAnimalEs (pagoIdeal) { // Método que evalúa qué animal es el amigo y en función de eso carga ciertos atributos de la clase.
+        if (this.deudor == true) { 
+            if (this.pagoReal > 0) {  
+                this.nombreAnimal = "perezoso"; // Si es deudor pero pagó, es un perezoso. 
+            } else if (this.pagoReal == 0) { 
+                this.nombreAnimal = "rata"; // Si es deudor pero no pago, es una rata.
             } else {
-                this.nombreAnimal = "mapache";
+                this.nombreAnimal = "mapache"; // Si es deudor y aparte su pago fue negativo, quiere decir que debe una deuda extra al total estipulado, por ende es un mapache. 
             }
         } else {
             if (this.pagoReal == total.value) {
-                this.nombreAnimal = "cerdo";
+                this.nombreAnimal = "cerdo"; // Si es acreedor y pagó todo, es un cerdo.
             } else if (this.pagoReal > pagoIdeal) {
-                this.nombreAnimal = "pez-payaso";
+                this.nombreAnimal = "pez-payaso"; // Si es acreedor y pagó más de lo que debería pero no todo, es un pez payaso.
             } else if (this.pagoReal == pagoIdeal) {
-                this.nombreAnimal = "capibara";
+                this.nombreAnimal = "capibara"; // Si es acreedor y pagó justo lo que debía pagar, es un capibara.
             }
         }
-        amigoAnimal = animales.find(animal => animal.nombre == this.nombreAnimal);
-        this.imagenAnimal = amigoAnimal.imagen;
-        this.colorAnimal = amigoAnimal.color;
+        amigoAnimal = animales.find(animal => animal.nombre == this.nombreAnimal); // Utilizamos el método find para buscar dentro de Animales el animal cuyo nombre coincida con el atributo nombreAnimal. 
+        this.imagenAnimal = amigoAnimal.imagen; // A partir de ello, almacenamos en amigoAnimal el objeto correspondiente al animal adecuado. 
+        this.colorAnimal = amigoAnimal.color; // Luego, extraemos sus propiedades almacenándolas en los atributos de nuestra clase.
     }
-    infoAnimales() {
-        let info = [];
+    infoAnimales() { // Método que en función del atributo nombreAnimal determina la descripción del amigo y la retorna en un array.
+        let info = []; // Array para almacenar la descripción de un amigo, compuesta por dos strings: El título, y el texto.
         switch (this.nombreAnimal) {
             case "cerdo":
                 info = [`"Todos los animales son iguales, pero algunos más que otros"`, `Mítica frase de George Orwell referida a los cerdos como ${this.nombre}. Oh, ${this.nombre}, que tus baños en barro dorado jamás terminen, y tu famosa frase 'Nah, no se preocupen, yo pago esta', perdure por los siglos de los siglos, Amén. Alabado sea el cerdo de ${this.nombre} y qué hijo de p...`];
@@ -117,8 +118,8 @@ class Amigo {
         return info;
     }
 }
-let sesion = [];
-class historial {
+let sesion = []; // Array que almacena el historial completo, el conjunto de sesiones. 
+class historial { // Clase 
     cantAmigos;
     total;
     amigos;
@@ -334,7 +335,6 @@ ok3.addEventListener("click", ()=>{
             let varPago = document.querySelector(`#inp2${j+1}`);
             let varCargar = document.querySelector(`#inp3${j+1}`);
             varCargar.addEventListener("click", () =>{
-                console.log("inicia acá");
                 totalReal = sumador(totalReal, parseFloat(varPago.value));
                 if (totalReal <= parseFloat(total.value)) {
                     p2aside.innerText = `Monto actual: ${totalReal}`;
