@@ -24,7 +24,7 @@ let calcular = document.querySelector("#calcular"); // Botón a partir de los in
 let reiniciar = document.querySelector("#reiniciar"); // Botón para reiniciar la página. Recomendable guardar la información en el historial antes por obvias razones.
 let guardar = document.createElement("button"); // Botón para guardar los resultados en el historial.
 let regresar = document.createElement("button"); // Botón para regresar desde el historial a aquella parte del sitio de donde haya venido.
-let sesionJS = JSON.parse(localStorage.getItem("sesion")); // Variable que almacena el historial traido desde el local storage.
+let historialJS = JSON.parse(localStorage.getItem("historial")); // Variable que almacena el historial traido desde el local storage.
 let noguardado = true; // Variable para analizar si el historial fue guardado o no. Al llegar a su uso se explicará con más detalle.
 let booleanhelper = false; // Variable booleana para revisar si el usuario ya clickeó calcular, o no. Al llegar a su uso se explicará con más detalle.
 let amigoAnimal; // Variable que almacena un objeto, correspondiente a un animal que cumpla la condición de un método find específico en la clase Amigo. 
@@ -118,13 +118,13 @@ class Amigo { // Clase para definir objetos correspondientes a los atributos de 
         return info;
     }
 }
-let sesion = []; // Array que almacena el historial completo, el conjunto de sesiones. 
-class historial { // Clase 
-    cantAmigos;
-    total;
-    amigos;
-    amigosLength;
-    deudaTotal;
+let historial = []; // Array que almacena el historial completo, el conjunto de sesiones. 
+class sesion { // Clase que dictamina los objetos que almacenarán una sesión cada uno.
+    cantAmigos; // Cantidad de amigos.
+    total; // Total del pago.
+    amigos; // Array con los amigos y su información.
+    amigosLength; // Largo de dicho array.
+    deudaTotal; // La deuda total correspondiente a una sesión.
     constructor (cantAmigos, total, amigos, amigosLength, deudaTotal) {
         this.cantAmigos = cantAmigos;
         this.total = total;
@@ -215,26 +215,25 @@ function mostrarDatos(protoAmigos, m, deudaTotal) {
     return [amigocartel, fotoAnimal, uldeudas, verMas];
 }
 mostrarHistorial.addEventListener("click", ()=>{
-  let sesionJS = JSON.parse(localStorage.getItem("sesion"));
-  if (sesionJS !== null) {
-    sesion = [];
-    for (let p = 0; p < sesionJS.length; p++) {
-      sesion.push(sesionJS[p]);
+  let historialJS = JSON.parse(localStorage.getItem("historial"));
+  if (historialJS !== null) {
+    historial = [];
+    for (let p = 0; p < historialJS.length; p++) {
+      historial.push(historialJS[p]);
     }
     historialSection.innerHTML = "";
     historialSection.classList.remove("display-none");
-    for (let q = 0; q < sesion.length; q++) {
-        let varSesion = sesion[q];
-        // cargarDatos(varSesion.amigosLength, varSesion.amigos, varSesion.deudaTotal);
+    for (let q = 0; q < historial.length; q++) {
+        let varHistorial = historial[q];
         let article4 = document.createElement("article");
         let sesionName = document.createElement("h1");
-        sesionName.innerText = `Sesión N°${sesion.length-q}`
+        sesionName.innerText = `Sesión N°${historial.length-q}`
         article4.append(sesionName);
         historialSection.append(article4);
-        for (let m = 0; m < varSesion.amigosLength; m++) {
+        for (let m = 0; m < varHistorial.amigosLength; m++) {
             let tarjetaHistorial = document.createElement("div");
             tarjetaHistorial.classList.add("tarjetas");
-            let [amigocartel2, fotoAnimal2, uldeudas2, verMas2] = mostrarDatos(varSesion.amigos, m, varSesion.deudaTotal);
+            let [amigocartel2, fotoAnimal2, uldeudas2, verMas2] = mostrarDatos(varHistorial.amigos, m, varHistorial.deudaTotal);
             tarjetaHistorial.append(amigocartel2, fotoAnimal2, uldeudas2, verMas2);
             article4.append(tarjetaHistorial);
         }
@@ -434,16 +433,16 @@ ok3.addEventListener("click", ()=>{
                             article3.append(guardar);
                             guardar.addEventListener("click", ()=>{
                                 if (noguardado == true) {
-                                    if (sesionJS !== null) {
-                                        sesion = [];
-                                        for (let p = 0; p < sesionJS.length; p++) {
-                                            sesion.push(sesionJS[p]);
+                                    if (historialJS !== null) {
+                                        historial = [];
+                                        for (let p = 0; p < historialJS.length; p++) {
+                                            historial.push(historialJS[p]);
                                         }       
                                     }
-                                    let nuevoHistorial = new historial(cantAmigos.value, total.value, Amigos, Amigos.length, deudaTotal);
-                                    sesion.unshift(nuevoHistorial);
-                                    localStorage.removeItem("sesion");
-                                    localStorage.setItem("sesion", JSON.stringify(sesion));
+                                    let nuevaSesion = new sesion(cantAmigos.value, total.value, Amigos, Amigos.length, deudaTotal);
+                                    historial.unshift(nuevaSesion);
+                                    localStorage.removeItem("historial");
+                                    localStorage.setItem("historial", JSON.stringify(historial));
                                     historialSection.innerHTML = "";
                                     noguardado = false;
                                   } else {
