@@ -330,15 +330,15 @@ ok3.addEventListener("click", ()=>{
         }
         let conjuntoTarjetas = document.querySelectorAll(".form-tarjetas");
         for (let j = 0; j < conjuntoTarjetas.length; j++) {
-            let varTarjeta = conjuntoTarjetas[j];
             let varNombre = document.querySelector(`#inp1${j+1}`);
             let varPago = document.querySelector(`#inp2${j+1}`);
             let varCargar = document.querySelector(`#inp3${j+1}`);
-            varTarjeta.addEventListener("submit", () =>{
+            varCargar.addEventListener("click", () =>{
+                console.log("inicia acá");
                 totalReal = sumador(totalReal, parseFloat(varPago.value));
-                if (totalReal <= total.value) {
+                if (totalReal <= parseFloat(total.value)) {
                     p2aside.innerText = `Monto actual: ${totalReal}`;
-                    if (totalReal == total.value) {
+                    if (totalReal == parseFloat(total.value)) {
                         p2aside.innerText = `Monto actual: ${totalReal} (límite alcanzado)`;       
                     }
                     if (parseFloat(varPago.value) < 0) {
@@ -350,7 +350,7 @@ ok3.addEventListener("click", ()=>{
                             imageWidth: 350,
                             backdrop:`
                             rgba(82, 214, 57, 0.8)`
-                        })
+                        });
                     }
                     varNombre.disabled = true;
                     varPago.disabled = true;                    
@@ -419,8 +419,8 @@ ok3.addEventListener("click", ()=>{
                             for (let m = 0; m <= Amigos.length-1; m++) {
                                 conjuntoTarjetas[m].innerHTML = "";
                                 conjuntoTarjetas[m].classList.add("tarjetas");
-                                let [amigocartel3, fotoAnimal3, uldeudas3, verMas3] = mostrarDatos(Amigos, m, deudaTotal);
-                                conjuntoTarjetas[m].append(amigocartel3, fotoAnimal3, uldeudas3, verMas3);
+                                let datosMostrados = mostrarDatos(Amigos, m, deudaTotal);
+                                conjuntoTarjetas[m].append(datosMostrados[0], datosMostrados[1], datosMostrados[2], datosMostrados[3]);
                             }
                             article3.append(reiniciar);
                             article3.append(mostrarHistorial);
