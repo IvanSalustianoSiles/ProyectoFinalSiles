@@ -136,23 +136,23 @@ fetch("/data/animales.json") // Utilizamos el método fetch para traer la inform
 });
 // Funciones
 function sumador (n1, n2) { // Función que suma dos números
-    let resultado = n1 + n2;
+    let resultado = n1 + n2; // De necesitar una resta, el segundo sumando se ingresa negativo por medio de los parámetros a modo de sustraendo.
     return resultado;
 }
 function ifSegundosCases (deudorX, deudaN, deudaParaX, nombreX, deudaTotal, uldeudas) { // Función que contempla si X es acreedor.
     if (deudorX == false) {
-        let deudaNAX = deudaN * deudaParaX / deudaTotal;
-        if (deudaNAX > 0) {            
+        let deudaNAX = deudaN * deudaParaX / deudaTotal; // Si X es acreedor, la deuda de N multiplica por la deuda para con X dividido la suma de las deudas para con todos los acreedores. // Esta fórmula que pensé hace unos años para dividir deudas con mis propios amigos es la base de SuperSammy, y nos permite hallar lo que le debe N a X. 
+        if (deudaNAX > 0) { // Si X es acreedor y aparte le deben dinero, es decir que puso más de lo que debería, se crea un li avisando sobre la deuda.
             let lidebe = document.createElement("li");
             lidebe.innerText = `- Debe ${Math.round(deudaNAX)} pesos a`;
-            lidebe.append(nombreX);
+            lidebe.append(nombreX); //nombreX será un div aparte; esto con tal de darle el color del animal asignado a X.
             uldeudas.append(lidebe);         
         }
     }
 }
 function ifAcreedor2 (deudaParaY, uldeudas) { // Función que contempla si Y es acreedor.
     let lideben = document.createElement("li");
-    if (deudaParaY > 0) {
+    if (deudaParaY > 0) { //Y es acreedor, pero el texto de su li varía en función de si le deben o no dinero, es decir, de si su deudaPara es positva o cero.
         lideben.innerText = `- Le deben ${Math.round(deudaParaY)} pesos y no debe.` 
     } else if (deudaParaY == 0) {
         lideben.innerText = `- No le deben dinero y no debe.` 
@@ -162,43 +162,43 @@ function ifAcreedor2 (deudaParaY, uldeudas) { // Función que contempla si Y es 
 function articuloAnimales(animal) { // Función que actualiza una variable artículo a partir del género de la palabra correspondiente al nombre del animal.
     if (animal == "rata" ) {
         articulo = "La";
-    } else {
+    } else { // La rata es el único animal de la aplicación que lleva un artículo femenino delante.
         articulo = "El";
     }
 }
 function mostrarDatos(protoAmigos, m, deudaTotal) { // Función que fundamentalmente se encarga de diseñar la muestra de los datos de los amigos.
-    let objetoM = protoAmigos[m];
+    let objetoM = protoAmigos[m]; // Objeto que almacena a un amigo específico, es decir, una posición del array de amigos.
     let uldeudas = document.createElement("ul");
     let amigocartel = document.createElement("h2");
     amigocartel.classList.add("amigo-cartel");
-    amigocartel.classList.add(`${objetoM.nombreAnimal}`);
-    let fotoAnimal = document.createElement("img");
-    let verMas = document.createElement("button");
+    amigocartel.classList.add(`${objetoM.nombreAnimal}`); // A propósito, los nombres de las clases que contienen los colores por cada animal llevan el mismo nombre que las diferentes opciones de .nombreAnimal.
+    let fotoAnimal = document.createElement("img"); // Me resulto interesante trabajar de esta manera con los colores, ya que hay casos donde preciso el color en sí mismo (que viene del .json) y otros donde me conviene aplicar una clase (del .css).
+    let verMas = document.createElement("button"); // Botón para ver la descripción de una tarjeta.
     verMas.innerText = "ver más";
-    verMas.classList.add(`${objetoM.nombreAnimal}`);
-    verMas.classList.add(`ver-mas`);
+    verMas.classList.add(`${objetoM.nombreAnimal}`); // Trabajando clases de nuevo bajo la congruencia con .nombreAnimal. Esto para agregarle personalidad y estilo a los amigos y sus tarjetas.
+    verMas.classList.add(`ver-mas`); 
     verMas.addEventListener("click",() => { // Evento para ver la descripción del animal.
-        Swal.fire({
-            title: `${objetoM.info[0]}`,
-            text: `${objetoM.info[1]}`,
-            confirmButtonColor: `${objetoM.colorAnimal}`,
-            imageUrl: `${objetoM.imagenAnimal}`,
+        Swal.fire({ // SweetAlert de las tarjetas (descripción con foto del animal).
+            title: `${objetoM.info[0]}`, // Recordemos que el método infoAnimales() devuelve un array; posición cero, título; posición uno, información del animal.
+            text: `${objetoM.info[1]}`, // Este retorno se almacena eventualmente en la propiedad .info de cada amigo, que aplicamos acá.
+            confirmButtonColor: `${objetoM.colorAnimal}`, // Acá de nuevo jugamos con el color. Nótese cómo, al precisar el color expresado en rgba, tomo .colorAnimal (proveniente de animales, proveniente del .json)
+            imageUrl: `${objetoM.imagenAnimal}`, 
             customClass: {
-                title: `${objetoM.nombreAnimal}`,
+                title: `${objetoM.nombreAnimal}`, // y en cambio, al utilizar la clase, juego con .nombreAnimal.
             },
             backdrop:`${objetoM.colorAnimal}`
         })
     })
-    fotoAnimal.setAttribute("src", `${objetoM.imagenAnimal}`);
+    fotoAnimal.setAttribute("src", `${objetoM.imagenAnimal}`); 
     fotoAnimal.classList.add("imagen-animal");
     articuloAnimales(objetoM.nombreAnimal);
-    let animalMostrado = objetoM.nombreAnimal;
+    let animalMostrado = objetoM.nombreAnimal; // animalMostrado es una variable temporal que utilizamos para el título de la tarjeta.
     if (objetoM.nombreAnimal == "pez-payaso") {
-        animalMostrado = "pez payaso";
+        animalMostrado = "pez payaso"; // Esta variable nos sirve para seguir trabajando con "pez-payaso" en .nombreAnimal y su coincidencia con la clase de css, sin arruinar el estilo del título.
     }
     amigocartel.innerText = `${objetoM.nombre}, ${articulo} ${animalMostrado}`;
-    if (objetoM.deudor == false) {
-        ifAcreedor2 (objetoM.deudaPara, uldeudas);
+    if (objetoM.deudor == false) { // Si el amigo es acreedor, se crearán y mostrarán los mensajes de acreedor en ifAcreedor2.
+        ifAcreedor2 (objetoM.deudaPara, uldeudas); // Todo esto recordemos que sucederá en el llamado de mostrarDatos, dentro de un for por cada tarjeta.
     } else {
         for (let n = 0; n < protoAmigos.length; n++) {
             while (n != m && n < protoAmigos.length) {
